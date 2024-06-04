@@ -52,9 +52,9 @@ const Login = () => {
   return (
     <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">
       <PageMeta description='Login page for CodeSync' title='Login | CodeSync' robots='index' />
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600">CodeSync</h1>
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text uppercase bg-gradient-to-r from-purple-500 to-indigo-500">CodeSync</h1>
           <p className="text-gray-600">Login below to access your account</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">

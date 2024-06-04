@@ -38,7 +38,7 @@ const Forget = () => {
 
   return (
     <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-indigo-600">Forget Password</h1>
           <p className="text-gray-600">Enter your email below to reset your password</p>
