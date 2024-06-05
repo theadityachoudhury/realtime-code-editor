@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-commit hook...🍺"
+
+npx lint-staged
+echo "ESLint & Prettier check completed successfully. ✅ "
+
+git add -A .
+
+npm run build || (
+  echo "Build failed. ❌ "
+  exit 1
+)
+echo "Build completed successfully. ✅ "
