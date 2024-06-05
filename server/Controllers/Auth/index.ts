@@ -212,7 +212,7 @@ const getuser = async (req: customRequest, res: Response, next: NextFunction) =>
 };
 
 const verifytoken = (req: customRequest, res: Response, next: NextFunction) => {
-  let token: string | undefined;
+  var token: any = undefined;
   if (req.cookies && (req.cookies.token || req.cookies.accessToken)) {
     token = req.cookies.token || req.cookies.accessToken;
   } else if (req.headers['authorization']) {
@@ -260,7 +260,7 @@ const refresh = async (
   const { user_id } = req;
   const refreshTokenColl = await RefreshToken.findOne({ userId: user_id });
   // console.log(refreshTokenColl);
-  const user: IUser | null = await Users.findById(req.user_id).select('-password');
+  const user = await Users.findById(req.user_id).select('-password');
   // console.log(req.user_id);
   // console.log(user);
   if (!user) {
