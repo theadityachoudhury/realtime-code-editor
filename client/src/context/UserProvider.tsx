@@ -1,17 +1,37 @@
-import axios from "axios";
 import React, { createContext, useEffect, useState, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
+import instance from "../axios";
 
 // Define the User type
 export interface User {
-	email: string;
 	name: {
-		first: string;
-		middle?: string;
-		last?: string;
+		fname: string,
+		mname?: string,
+		lname?: string,
+	},
+	_id: string,
+	email: string,
+	role: string,
+	verified: boolean,
+	deleted: boolean,
+}
+
+export interface BackendTokens {
+	token: string;
+	expiresIn: number;
+	refreshToken: string;
+	user: {
+		name: {
+			fname: string,
+			mname?: string,
+			lname?: string,
+		},
+		_id: string,
+		email: string,
+		role: string,
+		verified: boolean,
+		deleted: boolean,
 	}
-	verified: boolean;
-	id: string;
 }
 
 // Define the context type
@@ -28,11 +48,7 @@ interface UserContextType {
 }
 
 // Define the BackendTokens type
-interface BackendTokens {
-	token: string;
-	expiresIn: number;
-	refreshToken: string;
-}
+
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -57,32 +73,41 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
 
 	const fetchUser = async () => {
 		try {
-			const response = await axios.get("/api/auth/user");
-			if (response.data === null) {
+			const { data } = await instance.get("/api/auth/user");
+			if (data.status === 200) {
+				setUser(data.data);
+			}
+			else {
 				setUser(null);
 				setAuthenticated(false);
-			} else {
-				setUser({ ...response.data.data });
 			}
 			setError(null);
-		} catch (error) {
-			console.error(error);
+		}
+		catch (e) {
+			console.error(e);
 			setError("Failed to fetch user data");
-		} finally {
+		}
+		finally {
 			setReady(true);
 		}
 	};
 
 	const refreshAccessToken = async () => {
 		try {
-			const response = await axios.get("/api/auth/refresh");
-			Cookies.set("accessToken", response.data.token, {
-				secure: true,
-				sameSite: "Strict",
-				expires: new Date(Date.now() + response.data.expiresIn * 1000),
-			});
-			Cookies.set("authenticated", "true", { expires: 7 }); // Set cookie to expire in 7 days
-			await fetchUser();
+			const { data } = await instance.get("/api/auth/refresh");
+			if (data.status === 200) {
+				Cookies.set("accessToken", data.data.token, {
+					secure: true,
+					sameSite: "Strict",
+					expires: new Date(Date.now() + data.data.expiresIn * 1000),
+				});
+				Cookies.set("authenticated", "true", { expires: 7 }); // Set cookie to expire in 7 days
+				setUser(data.data.user);
+				await fetchUser();
+			} else {
+				setError("Failed to refresh access token");
+				logout();
+			}
 		} catch (error) {
 			console.error(error);
 			setError("Failed to refresh access token");
@@ -128,15 +153,16 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
 		};
 	}, [authenticated]);
 
-	const login = (backendTokens: BackendTokens) => {
-		console.log(backendTokens);
+	const login = (data: BackendTokens) => {
+		console.log(data);
+		setUser(data.user);
 		setAuthenticated(true);
-		Cookies.set("accessToken", backendTokens.token, {
+		Cookies.set("accessToken", data.token, {
 			secure: true,
 			sameSite: "Strict",
-			expires: new Date(Date.now() + backendTokens.expiresIn * 1000),
+			expires: new Date(Date.now() + data.expiresIn * 1000),
 		});
-		Cookies.set("refreshAccessToken", backendTokens.refreshToken);
+		Cookies.set("refreshAccessToken", data.refreshToken);
 		Cookies.set("authenticated", "true", { expires: 7 }); // Set cookie to expire in 7 days
 	};
 
@@ -155,7 +181,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
 				url: "/api/auth/logout",
 				headers: {},
 			};
-			await axios.request(config);
+			await instance.request(config);
 		} catch (error) {
 			console.log(error);
 		}

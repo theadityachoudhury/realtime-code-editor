@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
+import { useUserContext } from "../context/UserProvider"
 
 const Header = () => {
+    const { user, logout } = useUserContext();
     return (
         <div>
             <div className="flex justify-around my-2 text-lg">
@@ -21,7 +23,10 @@ const Header = () => {
                         <Link to="/profile">Profile</Link>
                     </div>
                     <div>
-                        <Link to="/logout">Logout</Link>
+                        <button onClick={logout} className="cursor-pointer">Logout</button>
+                    </div>
+                    <div>
+                        <p>Welcome, {user?.name.fname}</p>
                     </div>
                 </div>
             </div>

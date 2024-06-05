@@ -4,12 +4,14 @@ import App from './App.tsx'
 import './index.css'
 import { Toaster } from 'react-hot-toast'
 import AppProvider from './context/AppProvider.tsx'
+import Toast from './Components/Toast/index.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AppProvider>
       <App />
     </AppProvider>
-    <Toaster />
+    <Toaster position="bottom-right" reverseOrder={true} />
+    {/* <Toast /> */}
   </React.StrictMode>
 )

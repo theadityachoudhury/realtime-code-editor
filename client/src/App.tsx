@@ -8,6 +8,7 @@ import Chat from "./Pages/Chat"
 import Profile from "./Pages/Profile"
 import Logout from "./Pages/Logout"
 import Forget from "./Pages/Forget"
+import Verify from "./Pages/Verify"
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/verify" element={<Verify />} />
+
         </Route>
 
         <Route path="/">
