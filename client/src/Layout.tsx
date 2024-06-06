@@ -12,7 +12,7 @@ const Layout: React.FC = () => {
     const { pathname, search } = useLocation();
 
     if (!ready) {
-        return <Loader size={48} />;
+        return <Loader size={48} fullScreen={true} />;
     }
 
     if (!authenticated || !user) {

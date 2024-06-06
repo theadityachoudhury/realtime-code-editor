@@ -10,6 +10,8 @@ import sleep from '../Utils/Sleep';
 import useToast from '../Hooks/useToast';
 import { loginSchema } from '../Schema/Auth';
 import { useUserContext } from '../context/UserProvider';
+import PageMeta from '../Utils/PageMeta';
+import config from '../Config';
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -88,6 +90,7 @@ const Login = () => {
   if (!authenticated && ready && !user)
     return (
       <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">
+        <PageMeta title='CodeSync | Login' description='Login your account on CodeSync to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Sign up now!' canonical={`${config.FRONTEND_URL}/login`} />
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-indigo-600">Login</h1>
@@ -132,7 +135,7 @@ const Login = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
             <p className="text-center text-gray-600 mt-4">
-              Don't have an account? <Link to={callback?`/register?callback=${callback}`:`/register`} className="text-indigo-600">Register</Link>
+              Don't have an account? <Link to={callback ? `/register?callback=${callback}` : `/register`} className="text-indigo-600">Register</Link>
             </p>
           </form>
         </div>

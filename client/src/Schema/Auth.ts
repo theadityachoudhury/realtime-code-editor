@@ -15,4 +15,11 @@ export const registrationSchema = z.object({
 export const loginSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
-})
+});
+
+
+export const otpSchema = z.object({
+    otp: z.string().min(6, 'OTP must be 6 characters long'),
+});
+
+

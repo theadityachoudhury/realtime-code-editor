@@ -27,7 +27,9 @@ export type ResponseMessageKey =
     | 'refresh-token-success'
     | 'refresh-token-failure'
     | 'invalid-refresh-token'
-    | 'account-verified';
+    | 'account-verified'
+    | 'already-verified'
+    | 'no-otp';
 
 // Define the responseMessages object with the above keys and their respective messages
 const responseMessages: Record<ResponseMessageKey, string> = {
@@ -50,15 +52,17 @@ const responseMessages: Record<ResponseMessageKey, string> = {
     'otp-expired': 'OTP has expired. Please request a new one.',
     'invalid-otp': 'The provided OTP is invalid.',
     'otp-resend': 'OTP has been resent to your email.',
-    'otp-not-generated': 'OTP could not be generated. Please try again later.',
+    'otp-not-generated': 'OTP is not generated. First generate OTP then verify your account.',
     'no-user-id': 'No user ID provided.',
     'user-found': 'User found successfully.',
     'no-token': 'No token provided. Please login again.',
-    'invalid-token':'Invalid token! Session expired. Please login again.',
+    'invalid-token': 'Invalid token! Session expired. Please login again.',
     'refresh-token-success': 'Token refreshed successfully.',
     'refresh-token-failure': 'Failed to refresh token. Please login again.',
     'invalid-refresh-token': 'Invalid refresh token. Please login again.',
-    'account-verified': 'Your account has been verified successfully.'
+    'account-verified': 'Your account has been verified successfully.',
+    'already-verified': 'Your account is already verified.',
+    'no-otp': "No OTP found. Please enter OTP first."
 };
 
 export default responseMessages;

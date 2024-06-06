@@ -12,7 +12,7 @@ interface PageMetaProps {
 const PageMeta: React.FC<PageMetaProps> = ({
     title,
     description,
-    keywords = '',
+    keywords = 'Online Code Editor, Real-time Code Collaboration, Collaborative Programming, Code Sharing Platform, Multi-user Code Editor, Synchronous Coding, Live Coding Collaboration, Collaborative Coding Tools, Code Collaboration Software, Online Coding Workspace, Real-time Programming Environment, Team Coding Platform, Web-based Code Editor, Live Code Sharing, Remote Coding Collaboration, Pair Programming Online, Online Code Pairing, Interactive Code Editor, Cloud-based Code Editor, Collaborative Development Environment, Online IDE for Teams, Live Code Review, Multi-person Code Editing, Real-time Development Tool, Online Code Collaboration Tool, Remote Development Platform, Code Collaboration in the Cloud, Web IDE Collaboration, Online Programming Platform, Shared Coding Environment',
     author = 'Aditya Choudhury',
     robots = 'index, follow',
     canonical = '',
