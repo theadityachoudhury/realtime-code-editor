@@ -10,7 +10,7 @@ import Auth from '../../Models/Auth'
 import { ACCOUNT_VERIFIED, EMAIL_ALREADY_EXISTS, INCORRECT_PASSWORD, INTERNAL_SERVER_ERROR, INVALID_TOKEN, LOGIN_FAILURE, LOGIN_SUCCESS, NO_TOKEN, NO_USER_ID, OTP_INVALID, OTP_NOT_GENERATED, REFRESH_TOKEN_SUCCESS, SERVER_ERROR, SIGNUP_FAILURE, SIGNUP_SUCCESS, USER_FOUND, USER_NOT_FOUND } from '../../Utils/responseReason'
 import { otpgen } from '../../Utils/otpGen'
 
-export const access_token_cookie_expiry = new Date(Date.now() + 1000 * 10 * 60);
+export const access_token_cookie_expiry = 1000 * 10 * 60;
 
 
 const { JWT_SECRET, JWT_REFRESH_TOKEN_SECRET, FRONTEND_URL, APP_NAME } = Config;
@@ -123,7 +123,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
       res.cookie('token', token, {
         path: '/',
-        expires: access_token_cookie_expiry,
+        expires: new Date(Date.now() + access_token_cookie_expiry),
         httpOnly: true,
         sameSite: 'lax',
       });
@@ -293,8 +293,7 @@ const refresh = async (
   )
   res.cookie('token', token, {
     path: '/',
-    expires: access_token_cookie_expiry,
-    httpOnly: true,
+    expires: new Date(Date.now() + access_token_cookie_expiry),
     sameSite: 'lax',
   });
 
@@ -379,35 +378,35 @@ const verify = async (
   const auth_type = 'acc_verify'
   const { otp } = req.body
   const user_id = req.user_id
-    let auth = await Auth.findOne({ userId:user_id, auth_type: auth_type })
-    if (auth) {
-      if (auth.otp === otp) {
-        verifyUser(req.email, true)
-        await Auth.findByIdAndDelete(auth._id)
-        // console.log(req._id);
-        res.clearCookie(req.user_id)
-        return res.status(200).json({
-          status: 200,
-          reason: ACCOUNT_VERIFIED,
-          success: true,
-          data: {}
-        })
-      } else {
-        return res.status(200).json({
-          status: 401,
-          reason: OTP_INVALID,
-          success: false,
-          data: null
-        })
-      }
+  let auth = await Auth.findOne({ userId: user_id, auth_type: auth_type })
+  if (auth) {
+    if (auth.otp === otp) {
+      verifyUser(req.email, true)
+      await Auth.findByIdAndDelete(auth._id)
+      // console.log(req._id);
+      res.clearCookie(req.user_id)
+      return res.status(200).json({
+        status: 200,
+        reason: ACCOUNT_VERIFIED,
+        success: true,
+        data: {}
+      })
     } else {
       return res.status(200).json({
-        status: 403,
-        reason: OTP_NOT_GENERATED,
+        status: 401,
+        reason: OTP_INVALID,
         success: false,
         data: null
       })
     }
+  } else {
+    return res.status(200).json({
+      status: 403,
+      reason: OTP_NOT_GENERATED,
+      success: false,
+      data: null
+    })
+  }
 }
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {
