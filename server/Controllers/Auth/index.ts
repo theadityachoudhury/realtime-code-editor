@@ -378,12 +378,11 @@ const verify = async (
 ) => {
   const auth_type = 'acc_verify'
   const { otp } = req.body
-  const email = req.email
-  if (await AuthValidator.validateEmail(email)) {
-    let auth = await Auth.findOne({ email, auth_type: auth_type })
+  const user_id = req.user_id
+    let auth = await Auth.findOne({ userId:user_id, auth_type: auth_type })
     if (auth) {
       if (auth.otp === otp) {
-        verifyUser(email, true)
+        verifyUser(req.email, true)
         await Auth.findByIdAndDelete(auth._id)
         // console.log(req._id);
         res.clearCookie(req.user_id)
@@ -409,7 +408,6 @@ const verify = async (
         data: null
       })
     }
-  }
 }
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {
@@ -482,20 +480,21 @@ const generate = async (
 
   let auth
   try {
-    auth = await Auth.findOne({ email, auth_type: auth_type })
+    auth = await Auth.findOne({ userId: req.user_id, auth_type: auth_type })
   } catch (err) {
-    return res.status(500).json({
-      reason: 'error',
-      message: 'Internal Server Error! Cannot generate OTP!',
-      success: false,
-    })
+    return res.status(200).json({
+      status: 500,
+      reason: 'server-error',
+      data: null,
+      success: false
+    });
   }
   if (auth) {
     otp = auth.otp
   } else {
     otp = otpgen(otp_len)
     auth = new Auth({
-      email,
+      userId: req.user_id,
       auth_type,
       otp,
     })
@@ -504,34 +503,34 @@ const generate = async (
       await auth.save()
     } catch (err) {
       console.log(err)
-      return res.status(500).json({
-        reason: 'error',
-        message: 'Internal Server Error! Cannot generate OTP!',
-        success: false,
-      })
+      return res.status(200).json({
+        status: 500,
+        reason: 'server-error',
+        data: null,
+        success: false
+      });
     }
   }
 
   try {
     mailer(
       email,
-      'Account Verification OTP | Get-Me-Through',
+      `Account Verification OTP | ${APP_NAME}`,
       `Your account verification OTP is :- ${otp}`,
-      email,
+      req.user_id,
       auth_type,
     )
   } catch (e) {
-    return res.status(500).json({
-      reason: 'error',
-      message: 'Internal Server Error! Unable to send E-Mail!! Mailer Error',
-      success: false,
-    })
+    console.error(e);
   }
 
   return res.status(200).json({
-    otp: otp,
-    message: 'OTP generated successfully and sent to registered E-Mail',
+    status: 200,
+    reason: 'otp-sent',
     success: true,
+    data: {
+      otp: otp
+    }
   })
 }
 

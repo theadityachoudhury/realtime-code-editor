@@ -53,9 +53,10 @@ const verification = async (
 ) => {
   if (req.verified) {
     return res.status(200).json({
-      reason: 'verified',
-      message: 'user already verified',
+      status: 404,
+      reason: 'already-verified',
       success: false,
+      data: null
     })
   } else {
     next()
@@ -66,9 +67,10 @@ const isOTP = (req: customRequest, res: Response, next: NextFunction) => {
     next()
   } else {
     return res.status(200).json({
-      reason: 'no-OTP',
-      message: 'no OTP was provided! Enter otp and try again!',
+      status: 404,
+      reason: 'no-otp',
       success: false,
+      data: null
     })
   }
 }
