@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import { startServer } from './Utils'
 import Auth from './Routes/Auth'
+import Code from './Routes/Code'
 import cookieParser from 'cookie-parser'
 import config from './Config'
 
@@ -53,6 +54,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 //App Routes
 app.use('/api/auth', Auth)
+app.use('/api/code', Code);
 
 // Default not-found route
 app.use((req: Request, res: Response) => {
