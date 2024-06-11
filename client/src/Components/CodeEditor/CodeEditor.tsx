@@ -4,16 +4,14 @@ import Editor from '@monaco-editor/react';
 import { useFiles } from '../../context/FileProvider';
 import { useEditor } from '../../context/CodeEditorProvider';
 import Header from '../Header';
-import { convertToWindowsLineEndings } from '../../Utils/codeConverter';
 import Loader from '../Loader';
 
 
 const CodeEditor: React.FC = () => {
     const { language, setLanguage, theme, code, setCode, getDefaultCode } = useEditor();
-    const { updateFile, activeFile } = useFiles();
+    const { updateFile, activeFile, handleAddFile } = useFiles();
 
 
-    localStorage.setItem('testCode', convertToWindowsLineEndings(code));
 
     useEffect(() => {
         if (activeFile) {
@@ -35,10 +33,15 @@ const CodeEditor: React.FC = () => {
     // };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen" onKeyDown={(e) => {
+            if (e.ctrlKey && e.key ==='.') {
+                handleAddFile();
+            }
+        }}>
             {/* SideBar */}
             <Header />
             <div className="flex-grow h-full overflow-hidden">
+                <p className='text-md p-1 bg-gray-800'>{activeFile?.name}</p>
                 <Editor
                     className="w-full h-full"
                     language={language}
@@ -48,7 +51,7 @@ const CodeEditor: React.FC = () => {
                         if (!activeFile) return;
                         updateFile(activeFile.id, value || '', language);
                     }}
-                    loading={<Loader type='spinner' size={48}/>}
+                    loading={<Loader type='spinner' size={48} />}
                     options={{
                         wordWrap: 'on',
                         minimap: { enabled: false },

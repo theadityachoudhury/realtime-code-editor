@@ -1,6 +1,7 @@
 import { CodeEditorProvider } from "./CodeEditorProvider";
 import { FileProvider } from "./FileProvider";
 import RouterProvider from "./RouterProvider";
+import { RunnerProvider } from "./RunnerProvider";
 import { UserContextProvider } from "./UserProvider";
 
 function AppProvider({ children }: { children: React.ReactNode }) {
@@ -8,9 +9,11 @@ function AppProvider({ children }: { children: React.ReactNode }) {
         <UserContextProvider>
             <CodeEditorProvider>
                 <FileProvider>
-                    <RouterProvider>
-                        {children}
-                    </RouterProvider>
+                    <RunnerProvider>
+                        <RouterProvider>
+                            {children}
+                        </RouterProvider>
+                    </RunnerProvider>
                 </FileProvider>
             </CodeEditorProvider>
         </UserContextProvider>

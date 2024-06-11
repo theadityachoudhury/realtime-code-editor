@@ -1,6 +1,7 @@
 // src/Context/FileContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useEditor } from './CodeEditorProvider';
+import { getLanguageFromExtension } from '../Utils/defaultExtensionMap';
 
 export interface File {
     id: string;
@@ -17,12 +18,18 @@ export interface FileContextType {
     activeFile: File | null;
     renameFile: (id: string, name: string, language: string) => void;
     deleteFile: (id: string) => void;
+    handleAddFile: () => void;
+    renamingFileId: string | null;
+    setRenamingFileId: React.Dispatch<React.SetStateAction<string | null>>;
+    newFileName: string;
+    setNewFileName: React.Dispatch<React.SetStateAction<string>>;
+    handleRenameFile: (fileId: string) => void;
 }
 
 const FileContext = createContext<FileContextType | undefined>(undefined);
 
 export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { getDefaultCode, setCode, setLanguage } = useEditor();
+    const { getDefaultCode, setCode, setLanguage, language } = useEditor();
     const [files, setFiles] = useState<File[]>(() => {
         const savedFiles = localStorage.getItem('files');
         return savedFiles ? JSON.parse(savedFiles) : [];
@@ -31,6 +38,9 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const savedActiveFileId = localStorage.getItem('activeFileId');
         return savedActiveFileId ? JSON.parse(savedActiveFileId) : null;
     });
+
+    const [renamingFileId, setRenamingFileId] = useState<string | null>(null);
+    const [newFileName, setNewFileName] = useState('');
 
     useEffect(() => {
         localStorage.setItem('files', JSON.stringify(files));
@@ -59,13 +69,14 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const deleteFile = (id: string) => {
-        if (files.length >= 2) setActiveFile(files[files.length - 2].id);
-        else {
+        setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
+        if (files.length == 0) {
             setActiveFile("")
             setLanguage("")
             setCode(getDefaultCode(""))
-        };
-        setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
+        } else {
+            setActiveFile(files[0].id);
+        }
 
     }
 
@@ -73,7 +84,20 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setActiveFileId(id);
     };
 
-    const activeFile = files.find((file) => file.id === activeFileId) || null;
+    const handleAddFile = () => {
+        const id = Date.now().toString();
+        const newFile = { id, name: `File ${files.length + 1}`, content: "", language };
+        addFile(newFile);
+        setRenamingFileId(id);
+        setNewFileName(`File ${files.length + 1}`);
+    };
+
+    const handleRenameFile = (fileId: string) => {
+        renameFile(fileId, newFileName, getLanguageFromExtension(newFileName.split('.').pop() || ''));
+        setRenamingFileId(null);
+    };
+
+    const activeFile = files.find((file) => file.id === activeFileId) || files[0] || null;
 
     const value = {
         files,
@@ -83,6 +107,12 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         activeFile,
         renameFile,
         deleteFile,
+        handleAddFile,
+        renamingFileId,
+        setRenamingFileId,
+        newFileName,
+        setNewFileName,
+        handleRenameFile,
     };
 
     return <FileContext.Provider value={value}>{children}</FileContext.Provider>;

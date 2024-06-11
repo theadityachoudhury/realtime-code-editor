@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Files, Play, Users, MessageSquareMore, User, LogOut, Check, X } from 'lucide-react';
-import { File, useFiles } from '../context/FileProvider';
+import { Files, Play, Users, MessageSquareMore, User, LogOut } from 'lucide-react';
+import { useFiles } from '../context/FileProvider';
 import { useUserContext } from '../context/UserProvider';
-import { useEditor } from '../context/CodeEditorProvider';
-import { getLanguageFromExtension } from '../Utils/defaultExtensionMap';
+import FilesList from './Tabs/FilesList';
+import Runner from './Tabs/Runner';
 
 enum Tab {
     Files = 'files',
@@ -16,65 +16,28 @@ enum Tab {
 const Header: React.FC = () => {
     const { logout } = useUserContext();
     const [activeTab, setActiveTab] = useState<Tab>(Tab.Files);
-    const iconSize = 30;
-    const { files, addFile, setActiveFile, renameFile, deleteFile } = useFiles();
-    const { language } = useEditor();
-    const [renamingFileId, setRenamingFileId] = useState<string | null>(null);
-    const [newFileName, setNewFileName] = useState('');
-
-    const handleAddFile = () => {
-        const id = Date.now().toString();
-        const newFile = { id, name: `File ${files.length + 1}`, content: "", language };
-        addFile(newFile);
-        setRenamingFileId(id);
-        setNewFileName(`File ${files.length + 1}`);
-    };
-
-    const handleRenameFile = (fileId: string) => {
-        renameFile(fileId, newFileName, getLanguageFromExtension(newFileName.split('.').pop() || ''));
-        setRenamingFileId(null);
-    };
+    const iconSize = 20;
+    const { files, setActiveFile, activeFile, handleRenameFile, deleteFile, renamingFileId, newFileName, setRenamingFileId, handleAddFile, setNewFileName } = useFiles();
 
     const renderContent = () => {
         switch (activeTab) {
             case Tab.Files:
                 return (
-                    <div className="h-full flex flex-col">
-                        <div className="flex justify-between items-center space-x-36">
-                            <h1 className="text-2xl font-bold">Files</h1>
-                            <button onClick={handleAddFile} className="p-2 bg-gray-800 text-white rounded-md">Add File</button>
-                        </div>
-                        <div className="flex-grow mt-4 overflow-y-auto">
-                            {files.map((file: File) => (
-                                <div key={file.id} className="flex items-center p-2 hover:bg-gray-700">
-                                    {renamingFileId === file.id ? (
-                                        <div className="flex items-center space-x-2">
-                                            <input
-                                                autoFocus
-                                                value={newFileName}
-                                                onChange={(e) => setNewFileName(e.target.value)}
-                                                className="p-1 bg-gray-800 text-white rounded-md"
-                                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                                    if (e.key === 'Enter') handleRenameFile(file.id);
-                                                }}
-                                            />
-                                            <Check size={iconSize} className="cursor-pointer" onClick={() => handleRenameFile(file.id)} />
-                                            <X size={iconSize} className="cursor-pointer" onClick={() => setRenamingFileId(null)} />
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center space-x-2 w-full">
-                                            <span onClick={() => setActiveFile(file.id)} className="flex-grow cursor-pointer">{file.name}</span>
-                                            <Files size={iconSize} className="cursor-pointer" onClick={() => { setRenamingFileId(file.id); setNewFileName(file.name); }} />
-                                            <Files size={iconSize} className="cursor-pointer" onClick={() => deleteFile(file.id)} />
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <FilesList
+                        handleAddFile={handleAddFile}
+                        files={files}
+                        activeFile={activeFile}
+                        renamingFileId={renamingFileId}
+                        newFileName={newFileName}
+                        setNewFileName={setNewFileName}
+                        handleRenameFile={handleRenameFile}
+                        iconSize={iconSize}
+                        setRenamingFileId={setRenamingFileId}
+                        deleteFile={deleteFile}
+                        setActiveFile={setActiveFile} />
                 );
             case Tab.Run:
-                return <div className="flex-grow">Run Content</div>;
+                return <Runner />;
             case Tab.Users:
                 return <div className="flex-grow">Users Content</div>;
             case Tab.Chat:
@@ -85,6 +48,7 @@ const Header: React.FC = () => {
                 return <div>Select a tab</div>;
         }
     };
+
 
     return (
         <div>
