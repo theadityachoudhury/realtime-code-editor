@@ -15,7 +15,7 @@ const Runner = () => {
     };
 
     return (
-        <div className="text-black space-y-5">
+        <div className="text-black space-y-5" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
             <div className="space-y-2">
                 <p className="text-3xl text-white font-poppins font-thin">
                     Run Code
@@ -60,7 +60,7 @@ const Runner = () => {
             <div className="space-y-2">
                 <p className="text-white text-lg">Output:</p>
                 <div
-                    className="bg-gray-700 p-2 rounded-md text-gray-50 max-h-80 max-w-64 min-h-80 word-wrap text-lg overflow-auto"
+                    className="bg-gray-700 p-2 rounded-md text-gray-50 max-w-64 min-h-80 word-wrap text-lg overflow-auto"
                     style={{ whiteSpace: 'pre-wrap' }}
                 >
                     {output}

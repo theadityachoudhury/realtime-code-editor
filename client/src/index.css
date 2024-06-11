@@ -50,3 +50,38 @@ body {
 	background-color: black;
 	color: white;
 }
+
+@layer utilities {
+    .scrollbar-thin-rounded {
+        @apply scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-700;
+    }
+}
+
+/* Apply the styles globally without changing the background */
+html, body, * {
+    scrollbar-width: thin;
+    scrollbar-color: #4a5568 transparent; /* Thumb color and transparent track */
+}
+
+/* Specific scrollbar styling for WebKit browsers */
+::-webkit-scrollbar {
+    width: 8px; /* Adjust the width */
+    height: 8px; /* Adjust the height */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Ensure the track background is transparent */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4a5568; /* Tailwind gray-700 */
+    border-radius: 10px; /* Make the scrollbar thumb rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #2d3748; /* Tailwind gray-800 for hover state */
+}
+
+::-webkit-scrollbar-button {
+    display: none; /* Remove the arrows/buttons */
+}
