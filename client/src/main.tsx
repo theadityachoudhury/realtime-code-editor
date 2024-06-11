@@ -8,7 +8,7 @@ import AppProvider from './context/AppProvider.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AppProvider>
-      <App />
+      <App/>
     </AppProvider>
     <Toaster position="bottom-right" reverseOrder={true} />
   </React.StrictMode>

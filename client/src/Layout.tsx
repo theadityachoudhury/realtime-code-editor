@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { User, useUserContext } from "./context/UserProvider";
 import Loader from "./Components/Loader";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+// import Header from "./Components/Header";
+// import Footer from "./Components/Footer";
 
 
 const Layout: React.FC = () => {
@@ -26,9 +26,9 @@ const Layout: React.FC = () => {
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <Outlet />
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 };

@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
 import instance from "../axios";
+import useToast from "../Hooks/useToast";
 
 // Define the User type
 export interface User {
@@ -57,6 +58,7 @@ interface UserContextProviderProps {
 }
 
 export function UserContextProvider({ children }: UserContextProviderProps) {
+	const { toastSuccess } = useToast();
 	const [authenticated, setAuthenticated] = useState<boolean>(
 		Cookies.get("authenticated") === "true" || false
 	);
@@ -192,6 +194,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
 		Cookies.remove("refreshToken");
 		Cookies.set("authenticated", "false");
 		Cookies.remove("refreshAccessToken");
+		toastSuccess("Logged out successfully", 5000);
 	};
 
 	return (

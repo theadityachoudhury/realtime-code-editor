@@ -89,7 +89,7 @@ const Login = () => {
 
   if (!authenticated && ready && !user)
     return (
-      <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">
+      <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500 text-black">
         <PageMeta title='CodeSync | Login' description='Login your account on CodeSync to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Sign up now!' canonical={`${config.FRONTEND_URL}/login`} />
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
           <div className="text-center mb-8">

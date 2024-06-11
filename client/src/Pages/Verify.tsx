@@ -19,7 +19,7 @@ const Verify = () => {
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(20); // Initial timer value
   const { toastSuccess, toastError, toastWarn } = useToast();
-  const { user, authenticated, ready, verify } = useUserContext();
+  const { user, authenticated, ready, verify, logout } = useUserContext();
 
   const sendOTP = async () => {
     try {
@@ -48,7 +48,7 @@ const Verify = () => {
 
   useEffect(() => {
     sendOTP().then().catch((err: any) => { console.log(err) });
-  },[])
+  }, [])
 
   // Effect to start and reset timer
   useEffect(() => {
@@ -106,7 +106,7 @@ const Verify = () => {
 
   if (authenticated && ready && user && !user.verified)
     return (
-      <div className="flex h-screen justify-center items-center">
+      <div className="flex h-screen justify-center items-center text-black">
         <PageMeta title='CodeSync | Verify' description='Verify your account on CodeSync to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Sign up now!' canonical={`${config.FRONTEND_URL}/verify`} />
         <div className="bg-slate-200 p-10 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
           <div className="text-center mb-8">
@@ -148,6 +148,10 @@ const Verify = () => {
               Resend OTP {timer > 0 && `(${timer}s)`}
             </button>
           </form>
+
+          <div className="text-center font-bold mt-10 bg-red-950 hover:bg-red-800 rounded-md p-2 cursor-pointer" onClick={logout}>
+            <p className="text-red-100 hover:text-red-200">Wanna Logout?</p>
+          </div>
         </div>
       </div>
     );

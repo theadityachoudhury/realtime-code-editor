@@ -1,7 +1,10 @@
+import CodeEditor from "../Components/CodeEditor/CodeEditor"
 
 const Editor = () => {
   return (
-    <div>Editor</div>
+    <div>
+      <CodeEditor />
+    </div>
   )
 }
 
