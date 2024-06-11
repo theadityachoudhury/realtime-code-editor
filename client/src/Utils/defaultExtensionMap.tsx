@@ -4,7 +4,7 @@ const defaultExtensionMap: Record<string, string> = {
     python: 'py',
     java: 'java',
     c: 'c',
-    cpp: 'c++',
+    cpp: 'cpp',
     html: 'html',
     css: 'css',
     scss: 'scss',
