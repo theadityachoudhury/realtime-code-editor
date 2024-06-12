@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 const Home = () => {
   const { user, logout } = useUserContext();
-  const { createRoom, joinRoom, deleteRoom, roomData } = useRoom();
+  const { createRoom, deleteRoom, roomData } = useRoom();
 
   return (
     <div className="bg-gray-700 text-white min-h-screen p-6 flex flex-col overflow-hidden">
