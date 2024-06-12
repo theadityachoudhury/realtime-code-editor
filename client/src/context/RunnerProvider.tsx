@@ -1,8 +1,9 @@
-import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import config from '../Config';
 import { useFiles } from './FileProvider';
 import { convertToWindowsLineEndings } from '../Utils/codeConverter';
+import instance from '../axios';
+import {useUserContext} from "./UserProvider";
 
 // Define the type for the language info
 type LanguageInfo = {
@@ -45,6 +46,7 @@ type RunnerProviderProps = {
 // Define the RunnerProvider component
 export const RunnerProvider: React.FC<RunnerProviderProps> = ({ children }) => {
     const { activeFile } = useFiles();
+    const {authenticated} = useUserContext();
     const [languageInfo, setLanguageInfo] = useState<LanguageInfo | null>(null);
     const [languageMap, setLanguageMap] = useState<Record<string, LanguageInfo>>({});
     const [output, setOutput] = useState<string>('');
@@ -54,7 +56,7 @@ export const RunnerProvider: React.FC<RunnerProviderProps> = ({ children }) => {
     const fetchLanguages = async () => {
         try {
             // Replace the URL with your actual endpoint
-            const response = await axios.get(`${config.BACKEND_URL}/api/code/runtimes`);
+            const response = await instance.get(`${config.BACKEND_URL}/api/code/runtimes`);
 
             // Extract the data from the response
             const data = response.data;
@@ -71,15 +73,16 @@ export const RunnerProvider: React.FC<RunnerProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        if (activeFile) {
+        if (authenticated && activeFile) {
             setLanguageInfo(getLanguageInfoByExtension(activeFile.language));
         }
-    }, [activeFile, languageMap]);
+    }, [activeFile, languageMap,authenticated]);
 
     // Fetch languages on component mount
     useEffect(() => {
+      if(authenticated)
         fetchLanguages();
-    }, []);
+    }, [authenticated]);
 
     // Function to get language info by extension
     const getLanguageInfoByExtension = (extension: string): LanguageInfo | null => {
@@ -96,7 +99,7 @@ export const RunnerProvider: React.FC<RunnerProviderProps> = ({ children }) => {
         if (!activeFile) return;
 
         try {
-            const response = await axios.post(`${config.BACKEND_URL}/api/code/execute`, {
+            const response = await instance.post(`${config.BACKEND_URL}/api/code/execute`, {
                 language: languageInfo?.language,
                 version: languageInfo?.version,
                 files: [{

@@ -15,21 +15,15 @@ interface CodeEditorContextType {
 const CodeEditorContext = createContext<CodeEditorContextType | undefined>(undefined);
 
 export const CodeEditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [language, setLanguage] = useState<string>(localStorage.getItem('language') || 'javascript');
+    const [language, setLanguage] = useState<string>('javascript');
     const [theme, setTheme] = useState<string>(localStorage.getItem('theme') || 'vs-dark');
-    const [code, setCode] = useState<string>(localStorage.getItem('code') || '// Write your code here');
+    const [code, setCode] = useState<string>('// Write your code here');
 
-    useEffect(() => {
-        localStorage.setItem('language', language);
-    }, [language]);
 
     useEffect(() => {
         localStorage.setItem('theme', theme);
     }, [theme]);
 
-    useEffect(() => {
-        localStorage.setItem('code', code);
-    }, [code]);
 
     const getDefaultCode = (language: string): string => {
         return defaultCodes[language] || '// Write your code here';

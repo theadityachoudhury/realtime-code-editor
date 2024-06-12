@@ -29,7 +29,12 @@ export type ResponseMessageKey =
     | 'invalid-refresh-token'
     | 'account-verified'
     | 'already-verified'
-    | 'no-otp';
+    | 'no-otp'
+    | 'room-created'
+    | 'room-cannot-create'
+    | 'room-deleted'
+    | 'db-unable'
+    | 'db-success';
 
 // Define the responseMessages object with the above keys and their respective messages
 const responseMessages: Record<ResponseMessageKey, string> = {
@@ -62,7 +67,12 @@ const responseMessages: Record<ResponseMessageKey, string> = {
     'invalid-refresh-token': 'Invalid refresh token. Please login again.',
     'account-verified': 'Your account has been verified successfully.',
     'already-verified': 'Your account is already verified.',
-    'no-otp': "No OTP found. Please enter OTP first."
+    'no-otp': "No OTP found. Please enter OTP first.",
+    'room-created': 'Room created successfully.',
+    'room-cannot-create': 'Room cannot be created. Please try again.',
+    'room-deleted': "Room deleted successfully",
+    'db-success': 'Data fetched successfully',
+    'db-unable': 'Unable to fetch data',
 };
 
 export default responseMessages;

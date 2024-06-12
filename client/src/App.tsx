@@ -5,6 +5,7 @@ import Layout from "./Layout"
 import Editor from "./Pages/Editor"
 import Forget from "./Pages/Forget"
 import Verify from "./Pages/Verify"
+import Home from "./Pages/Home"
 
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Editor />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/editor/:id" element={<Editor />} />
           <Route path="/verify" element={<Verify />} />
 
         </Route>

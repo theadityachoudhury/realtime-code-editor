@@ -11,8 +11,6 @@ const CodeEditor: React.FC = () => {
     const { language, setLanguage, theme, code, setCode, getDefaultCode } = useEditor();
     const { updateFile, activeFile, handleAddFile } = useFiles();
 
-
-
     useEffect(() => {
         if (activeFile) {
             setCode(activeFile.content || getDefaultCode(language));
@@ -20,21 +18,9 @@ const CodeEditor: React.FC = () => {
         }
     }, [activeFile, setCode]);
 
-    // const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const selectedLanguage = e.target.value;
-    //     setLanguage(selectedLanguage);
-    //     if (activeFile) {
-    //         updateFile(activeFile.id, getDefaultCode(selectedLanguage), selectedLanguage);
-    //     }
-    // };
-
-    // const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setTheme(e.target.value);
-    // };
-
     return (
         <div className="flex h-screen" onKeyDown={(e) => {
-            if (e.ctrlKey && e.key ==='.') {
+            if (e.ctrlKey && e.key === '.') {
                 handleAddFile();
             }
         }}>

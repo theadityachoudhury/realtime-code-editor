@@ -1,5 +1,5 @@
 // src/Context/FileContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useEditor } from './CodeEditorProvider';
 import { getLanguageFromExtension } from '../Utils/defaultExtensionMap';
 
@@ -30,25 +30,11 @@ const FileContext = createContext<FileContextType | undefined>(undefined);
 
 export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { getDefaultCode, setCode, setLanguage, language } = useEditor();
-    const [files, setFiles] = useState<File[]>(() => {
-        const savedFiles = localStorage.getItem('files');
-        return savedFiles ? JSON.parse(savedFiles) : [];
-    });
-    const [activeFileId, setActiveFileId] = useState<string | null>(() => {
-        const savedActiveFileId = localStorage.getItem('activeFileId');
-        return savedActiveFileId ? JSON.parse(savedActiveFileId) : null;
-    });
+    const [files, setFiles] = useState<File[]>([]);
+    const [activeFileId, setActiveFileId] = useState<string | null>(null);
 
     const [renamingFileId, setRenamingFileId] = useState<string | null>(null);
     const [newFileName, setNewFileName] = useState('');
-
-    useEffect(() => {
-        localStorage.setItem('files', JSON.stringify(files));
-    }, [files]);
-
-    useEffect(() => {
-        localStorage.setItem('activeFileId', JSON.stringify(activeFileId));
-    }, [activeFileId]);
 
     const addFile = (file: File) => {
         setFiles((prevFiles) => [...prevFiles, file]);
