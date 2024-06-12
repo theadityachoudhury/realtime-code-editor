@@ -4,6 +4,10 @@ export const SERVER_DOWN = 'server-down';
 export const SERVER_UP = 'server-up';
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 
+//DB
+export const DB_UNABLE = 'db-unable';
+export const DB_SUCCESS = 'db-success';
+
 //Signup
 export const SIGNUP_SUCCESS = 'signup-success';
 export const SIGNUP_FAILURE = 'Signup-failed';
@@ -42,3 +46,9 @@ export const INVALID_REFRESH_TOKEN = 'invalid-refresh-token';
 
 //Account
 export const ACCOUNT_VERIFIED = 'account-verified';
+
+
+//Room
+export const ROOM_CREATED = 'room-created';
+export const ROOM_CANNOT_CREATE = 'room-cannot-create';
+export const ROOM_DELETED = 'room-deleted';
