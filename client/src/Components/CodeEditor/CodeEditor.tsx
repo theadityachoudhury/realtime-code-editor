@@ -55,6 +55,23 @@ const CodeEditor: React.FC = () => {
                         contextmenu: true,
                         accessibilitySupport: 'auto',
                         acceptSuggestionOnEnter: 'on',
+                        acceptSuggestionOnCommitCharacter: true,
+                        snippetSuggestions: 'inline',
+                        suggestOnTriggerCharacters: true,
+                        suggestSelection: 'first',
+                        tabCompletion: 'on',
+                        autoClosingQuotes: 'always',
+                        autoClosingOvertype: 'always',
+                        autoClosingDelete: 'always',
+                        automaticLayout: true,
+                        dragAndDrop: true,
+                        colorDecorators: true,
+                        colorDecoratorsActivatedOn: "clickAndHover",
+                        copyWithSyntaxHighlighting: true,
+                        cursorBlinking: 'blink',
+                        cursorSmoothCaretAnimation: "on",
+                        mouseWheelZoom: true,
+                        quickSuggestions: { other: true, comments: true, strings: true },
                     }}
                 />
             </div>
