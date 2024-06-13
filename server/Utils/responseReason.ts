@@ -3,6 +3,7 @@ export const SERVER_ERROR = 'server-error';
 export const SERVER_DOWN = 'server-down';
 export const SERVER_UP = 'server-up';
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
+export const BAD_REQUEST = 'bad-request';
 
 //DB
 export const DB_UNABLE = 'db-unable';
@@ -52,3 +53,12 @@ export const ACCOUNT_VERIFIED = 'account-verified';
 export const ROOM_CREATED = 'room-created';
 export const ROOM_CANNOT_CREATE = 'room-cannot-create';
 export const ROOM_DELETED = 'room-deleted';
+export const ROOM_NOT_FOUND = 'room-not-found';
+
+
+//File
+export const FILE_CREATED = 'file-created';
+export const FILE_DELETED = 'file-deleted';
+export const FILE_NOT_FOUND = 'file-not-found';
+export const FILE_UPDATED = 'file-updated';
+export const FILE_ALREADY_EXISTS = 'file-already-exists';
