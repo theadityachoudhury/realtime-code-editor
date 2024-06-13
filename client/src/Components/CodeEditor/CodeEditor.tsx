@@ -13,7 +13,7 @@ const CodeEditor: React.FC = () => {
 
     useEffect(() => {
         if (activeFile) {
-            setCode(activeFile.content || getDefaultCode(language));
+            setCode(activeFile.content);
             setLanguage(activeFile.language);
         }
     }, [activeFile, setCode]);
