@@ -8,7 +8,7 @@ import Loader from '../Loader';
 
 
 const CodeEditor: React.FC = () => {
-    const { language, setLanguage, theme, code, setCode, getDefaultCode } = useEditor();
+    const { language, setLanguage, theme, code, setCode } = useEditor();
     const { updateFile, activeFile, handleAddFile } = useFiles();
 
     useEffect(() => {
