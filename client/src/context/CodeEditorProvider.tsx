@@ -1,6 +1,5 @@
 // src/Context/EditorContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import defaultCodes from '../Utils/defaultCodes';
 
 interface CodeEditorContextType {
     language: string;
@@ -9,7 +8,7 @@ interface CodeEditorContextType {
     setTheme: (theme: string) => void;
     code: string;
     setCode: (code: string) => void;
-    getDefaultCode: (language: string) => string;
+    getDefaultCode: () => string;
 }
 
 const CodeEditorContext = createContext<CodeEditorContextType | undefined>(undefined);
@@ -25,8 +24,8 @@ export const CodeEditorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }, [theme]);
 
 
-    const getDefaultCode = (language: string): string => {
-        return defaultCodes[language] || '// Write your code here';
+    const getDefaultCode = (): string => {
+        return '// Write your code here';
     };
 
     const value = {

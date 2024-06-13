@@ -34,7 +34,14 @@ export type ResponseMessageKey =
     | 'room-cannot-create'
     | 'room-deleted'
     | 'db-unable'
-    | 'db-success';
+    | 'db-success'
+    | 'room-not-found'
+    | 'file-created'
+    | 'file-deleted'
+    | 'file-not-found'
+    | 'file-updated'
+    | 'file-already-exists'
+    | 'bad-request';
 
 // Define the responseMessages object with the above keys and their respective messages
 const responseMessages: Record<ResponseMessageKey, string> = {
@@ -73,6 +80,13 @@ const responseMessages: Record<ResponseMessageKey, string> = {
     'room-deleted': "Room deleted successfully",
     'db-success': 'Data fetched successfully',
     'db-unable': 'Unable to fetch data',
+    'room-not-found': 'Room not found',
+    'file-created': 'File created successfully',
+    'file-deleted': 'File deleted successfully',
+    'file-not-found': 'File not found',
+    'file-updated': 'File updated successfully',
+    'file-already-exists': 'File already exists',
+    'bad-request': 'Bad request. Please try again.',
 };
 
 export default responseMessages;
