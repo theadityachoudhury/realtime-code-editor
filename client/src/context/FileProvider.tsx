@@ -45,13 +45,13 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [newFileName, setNewFileName] = useState('');
 
     useEffect(() => {
-        console.log(authenticated, currentRoom);
-        console.log(files)
+        // console.log(authenticated, currentRoom);
+        // console.log(files)
         if (authenticated && currentRoom) {
             instance.get(`/api/code/room/${currentRoom._id}/files`)
                 .then(({ data }) => {
                     if (data.status === 200) {
-                        console.log(data);
+                        // console.log(data);
                         data.data.forEach((file: any) => {
 
                             const fileData: File = {

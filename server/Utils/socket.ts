@@ -13,6 +13,7 @@ export const initializeSocket = (server: HttpServer) => {
 
     io.on('connection', (socket: Socket) => {
         console.log(`New client connected: ${socket.id}`);
+        socket.emit('connection',"Socket Successfully Connected");
         handleSocketEvents(io, socket);
 
         socket.on('disconnect', () => {
