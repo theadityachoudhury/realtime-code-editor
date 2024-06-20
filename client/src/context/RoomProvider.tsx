@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import instance from '../axios';
 import useToast from '../Hooks/useToast';
 import handleServerResponse from '../Utils/serverMessages';
-import { useUserContext } from "./UserProvider.tsx";
+import { useUserContext } from "./UserProvider";
+import { useSocket } from './SocketProvider';
 
-// Define the type for room data
 type RoomData = {
     _id: string;
     files: number;
@@ -12,27 +12,41 @@ type RoomData = {
     updatedAt: string;
 };
 
-// Define the type for the RoomProvider context
+type UserInRoom = {
+    socket_id: string;
+    user_id: string;
+    username: string;
+};
+
+type RoomType = {
+    room_id: string;
+    users: UserInRoom[];
+};
+
 type RoomContextType = {
     roomData: RoomData[];
     inRoom: boolean;
-    currentRoom: RoomData | null;
+    currentRoom: string | null;
     createRoom: () => void;
     joinRoom: (roomId: string) => void;
     deleteRoom: (roomId: string) => void;
     isValidRoom: (roomId: string) => Promise<boolean>;
+    usersInRoom: UserInRoom[];
 };
 
-// Create the context
+
 const RoomContext = createContext<RoomContextType | undefined>(undefined);
 
-// Define the RoomProvider component
 export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [usersInRoom, setUsersInRoom] = useState<UserInRoom[]>([]);
     const { toastSuccess, toastError } = useToast();
     const [roomData, setRoomData] = useState<RoomData[]>([]);
     const [inRoom, setInRoom] = useState<boolean>(false);
-    const [currentRoom, setCurrentRoom] = useState<RoomData | null>(null);
-    const { authenticated } = useUserContext();
+    const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+    const { authenticated, user } = useUserContext();
+    const { socket } = useSocket();
+
+    console.log(usersInRoom);
 
     async function fetchRooms() {
         try {
@@ -42,7 +56,6 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
             } else {
                 toastError(handleServerResponse(data.reason));
             }
-
         } catch (error) {
             toastError('Error fetching rooms');
             toastError("Check your internet connection and try again!");
@@ -50,11 +63,35 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     useEffect(() => {
-        if (authenticated)
-            fetchRooms();
-    }, [authenticated])
+        if (authenticated) fetchRooms();
+    }, [authenticated]);
 
-    // Function to create a new room
+    useEffect(() => {
+        if (socket) {
+            socket.on('roomJoined', (data: string) => {
+                toastSuccess(data);
+            });
+            socket.on('roomUsers', (data: RoomType) => {
+                setUsersInRoom(data.users);
+            });
+            socket.on('userJoined', (data: { userId: string; username: string }) => {
+                toastSuccess(`${data.username} joined the room`);
+            });
+            socket.on('userLeft', (user: { username: string }) => {
+                toastSuccess(`${user.username} left the room`);
+            });
+        }
+
+        return () => {
+            if (socket) {
+                socket.off('roomJoined');
+                socket.off('roomUsers');
+                socket.off('userJoined');
+                socket.off('userLeft');
+            }
+        };
+    }, [socket]);
+
     const createRoom = async () => {
         try {
             const { data } = await instance.post('/api/code/room');
@@ -70,14 +107,18 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    // Function to join a room
     const joinRoom = async (roomId: string) => {
-        // Assume implementation for joining room
+        console.log(roomId);
         setInRoom(true);
-        setCurrentRoom(roomData.find(room => room._id === roomId) || null);
+        setCurrentRoom(roomId);
+        socket.emit('joinRoom', {
+            room_id: roomId, user: {
+                name: user?.name.fname as string,
+                id: user?._id as string
+            }
+        });
     };
 
-    // Function to delete a room
     const deleteRoom = async (roomId: string) => {
         try {
             const { data } = await instance.delete(`/api/code/room/${roomId}`);
@@ -96,17 +137,12 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isValidRoom = async (roomId: string) => {
         try {
             const { data } = await instance.get(`/api/code/room/${roomId}`);
-            if (data.status === 200) {
-                return true;
-            } else {
-                return false;
-            }
+            return data.status === 200;
         } catch (err) {
             toastError("Unable to connect to the server!!");
             return false;
         }
-    }
-
+    };
 
     const value = {
         roomData,
@@ -116,12 +152,12 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinRoom,
         deleteRoom,
         isValidRoom,
+        usersInRoom,
     };
 
     return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
 };
 
-// Custom hook to use the Room context
 export const useRoom = (): RoomContextType => {
     const context = useContext(RoomContext);
     if (!context) {

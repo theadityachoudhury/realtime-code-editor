@@ -14,15 +14,15 @@ type SocketProviderProps = {
 };
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
-    const socket: Socket = useMemo(() => io(config.BACKEND_URL, { reconnectionAttempts: 2 }), []);
+    const socket: Socket = useMemo(() => io(config.BACKEND_URL), []);
 
     useEffect(() => {
-        socket.on("connection", (gg) => console.log("hello",gg));
+        socket.on("connection", (gg) => console.log(gg));
 
         return () => {
-            socket.off("connect");
+            socket.off("connection");
         }
-    }, [socket])
+    }, [])
 
 
     return (
@@ -33,7 +33,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         </SocketContext.Provider>
     );
 }
-
 
 export const useSocket = (): SocketContextType => {
     const context = useContext(SocketContext);

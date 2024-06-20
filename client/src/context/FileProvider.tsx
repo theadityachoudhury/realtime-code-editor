@@ -40,44 +40,39 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { getDefaultCode, setCode, setLanguage, language } = useEditor();
     const [files, setFiles] = useState<File[]>([]);
     const [activeFileId, setActiveFileId] = useState<string | null>(null);
-
     const [renamingFileId, setRenamingFileId] = useState<string | null>(null);
     const [newFileName, setNewFileName] = useState('');
 
     useEffect(() => {
-        // console.log(authenticated, currentRoom);
-        // console.log(files)
-        if (authenticated && currentRoom) {
-            instance.get(`/api/code/room/${currentRoom._id}/files`)
-                .then(({ data }) => {
-                    if (data.status === 200) {
-                        // console.log(data);
-                        data.data.forEach((file: any) => {
-
-                            const fileData: File = {
-                                id: file._id,
-                                name: file.fileName,
-                                content: file.content,
-                                language: getLanguageFromExtension(file.fileName.split('.').pop() || ''),
-                            }
-                            setFiles((prevFiles) => [...prevFiles, fileData]);
-
-                        })
-                        if (files.length) {
-                            setActiveFile(files[0].id);
-                        }
-
-                    } else {
-                        throw new Error('Failed to fetch files');
+        const fetchFiles = async () => {
+            try {
+                const { data } = await instance.get(`/api/code/room/${currentRoom}/files`);
+                if (data.status === 200) {
+                    const fetchedFiles = data.data.map((file: any) => ({
+                        id: file._id,
+                        name: file.fileName,
+                        content: file.content,
+                        language: getLanguageFromExtension(file.fileName.split('.').pop() || ''),
+                    }));
+                    setFiles(fetchedFiles);
+                    if (fetchedFiles.length > 0) {
+                        setActiveFile(fetchedFiles[0].id);
                     }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toastError('Failed to fetch files');
-                });
-        }
+                } else {
+                    throw new Error('Failed to fetch files');
+                }
+            } catch (error) {
+                console.error(error);
+                toastError('Failed to fetch files');
+            }
+        };
 
-    }, [authenticated, currentRoom]);
+        if (authenticated && currentRoom) {
+            setFiles([]); // Reset files when switching rooms
+            setActiveFileId(null); // Reset active file
+            fetchFiles();
+        }
+    }, [authenticated, currentRoom, toastError]);
 
     const addFile = (file: File) => {
         setFiles((prevFiles) => [...prevFiles, file]);
@@ -99,13 +94,13 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const deleteFile = async (id: string) => {
         try {
-            const { data } = await instance.delete(`/api/code/room/${currentRoom?._id}/file/${id}`);
+            const { data } = await instance.delete(`/api/code/room/${currentRoom}/file/${id}`);
             if (data.status === 200) {
                 setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
-                if (files.length == 0) {
-                    setActiveFile("")
-                    setLanguage("")
-                    setCode(getDefaultCode())
+                if (files.length === 0) {
+                    setActiveFileId(null);
+                    setLanguage('');
+                    setCode(getDefaultCode());
                 } else {
                     setActiveFile(files[0].id);
                 }
@@ -114,11 +109,10 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 toastError(handleServerResponse(data.reason));
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toastError('Failed to delete file');
         }
-
-    }
+    };
 
     const setActiveFile = (id: string) => {
         setActiveFileId(id);
@@ -127,9 +121,9 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const handleAddFile = async () => {
         const fileName = `File ${files.length + 1}`;
         try {
-            const { data } = await instance.post(`/api/code/room/${currentRoom?._id}/files`, { fileName: fileName, content: getDefaultCode() });
+            const { data } = await instance.post(`/api/code/room/${currentRoom}/files`, { fileName, content: getDefaultCode() });
             if (data.status === 200) {
-                const newFile = { id: data.data._id, name: fileName, content: "", language };
+                const newFile = { id: data.data._id, name: fileName, content: getDefaultCode(), language };
                 addFile(newFile);
                 setRenamingFileId(data.data._id);
                 setNewFileName(fileName);
@@ -137,33 +131,28 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 throw new Error('Failed to create file');
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toastError('Failed to create file');
         }
-
     };
 
     const handleRenameFile = async (fileId: string) => {
         const language = getLanguageFromExtension(newFileName.split('.').pop() || '');
         try {
-
-            const { data } = await instance.put(`/api/code/room/${currentRoom?._id}/file/${fileId}`, { fileName: newFileName })
+            const { data } = await instance.put(`/api/code/room/${currentRoom}/file/${fileId}`, { fileName: newFileName });
             if (data.status === 200) {
                 renameFile(fileId, newFileName, language);
                 setRenamingFileId(null);
             } else {
                 throw new Error('Failed to rename file');
             }
-
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toastError('Failed to rename file');
-
         }
-
     };
 
-    const activeFile = files.find((file) => file.id === activeFileId) || files[0] || null;
+    const activeFile = files.find((file) => file.id === activeFileId) || null;
 
     const value = {
         files,

@@ -4,6 +4,7 @@ import { useFiles } from '../context/FileProvider';
 import { useUserContext } from '../context/UserProvider';
 import FilesList from './Tabs/FilesList';
 import Runner from './Tabs/Runner';
+import UsersList from './Tabs/UsersList';
 
 enum Tab {
     Files = 'files',
@@ -39,7 +40,7 @@ const Header: React.FC = () => {
             case Tab.Run:
                 return <Runner />;
             case Tab.Users:
-                return <div className="flex-grow">Users Content</div>;
+                return <UsersList />;
             case Tab.Chat:
                 return <div className="flex-grow">Chat Content</div>;
             case Tab.Profile:
