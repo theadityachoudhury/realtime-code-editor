@@ -5,6 +5,8 @@ import { useUserContext } from '../context/UserProvider';
 import FilesList from './Tabs/FilesList';
 import Runner from './Tabs/Runner';
 import UsersList from './Tabs/UsersList';
+import UserChat from './Tabs/UserChat';
+import ProfilePage from './Tabs/Profile';
 
 enum Tab {
     Files = 'files',
@@ -42,9 +44,9 @@ const Header: React.FC = () => {
             case Tab.Users:
                 return <UsersList />;
             case Tab.Chat:
-                return <div className="flex-grow">Chat Content</div>;
+                return <UserChat />;
             case Tab.Profile:
-                return <div className="flex-grow">Profile Content</div>;
+                return <ProfilePage />;
             default:
                 return <div>Select a tab</div>;
         }
