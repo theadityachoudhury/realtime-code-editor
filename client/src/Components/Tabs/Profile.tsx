@@ -1,5 +1,4 @@
 import { useUserContext } from "../../context/UserProvider"; // Assuming this context exists
-import React from "react";
 import Loader from "../Loader";
 
 const ProfilePage = () => {
