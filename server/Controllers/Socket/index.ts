@@ -108,11 +108,25 @@ const disconnect = (io: Server, socket: Socket) => {
   });
 };
 
+const sendMessage = (io: Server, socket: Socket, data: { message: { username: string, message: string }, roomId: string }) => {
+  const { roomId, message } = data;
+  if (roomId) {
+    socket.to(roomId).emit('messageReceived', {
+      message: message.message,
+      username: message.username,
+    });
+  }
+};
+const addFile = (io: Server, socket: Socket, data: any) => { };
+const removeFile = (io: Server, socket: Socket, data: any) => { };
+const updateFile = (io: Server, socket: Socket, data: any) => { };
+
+
 export default {
   joinRoom,
   disconnect,
-  getSocketIdFromUserIdAndRoomId,
-  getUserIdFromSocketIdAndRoomId,
-  getRoomIdFromSocketIdAndUserId,
-  getRoomIdsFromSocketId,
+  sendMessage,
+  addFile,
+  removeFile,
+  updateFile,
 };
