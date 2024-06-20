@@ -19,7 +19,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { currentRoom } = useRoom();
     const [messages, setMessages] = useState<Message[]>([]);
 
-    console.log(messages);
 
     const sendMessage = (message: Message) => {
         setMessages((prevMessages) => [...prevMessages, message]);

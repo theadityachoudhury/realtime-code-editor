@@ -7,6 +7,7 @@ import { useRoom } from './RoomProvider';
 import useToast from '../Hooks/useToast';
 import { useUserContext } from './UserProvider';
 import handleServerResponse from '../Utils/serverMessages';
+import { useSocket } from './SocketProvider';
 
 export interface File {
     id: string;
@@ -34,6 +35,7 @@ export interface FileContextType {
 const FileContext = createContext<FileContextType | undefined>(undefined);
 
 export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const { socket } = useSocket();
     const { authenticated } = useUserContext();
     const { currentRoom } = useRoom();
     const { toastError, toastSuccess } = useToast();
@@ -74,6 +76,31 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [authenticated, currentRoom, toastError]);
 
+    useEffect(() => {
+        socket.on('fileAdded', (data: { id: string, name: string, content: string, language: string }) => {
+            addFile({ id: data.id, name: data.name, content: data.content, language: data.language });
+        });
+
+        socket.on('fileRenamed', (data: { id: string, name: string, language: string }) => {
+            const { id, name, language } = data;
+            renameFile(id, name, language);
+        });
+
+        socket.on('fileDeleted', (data: { id: string }) => {
+            deleteAFile(data.id);
+        });
+
+        socket.on('fileUpdated', (data: { id: string, content: string, language: string }) => {
+            updateFile(data.id, data.content, data.language);
+        });
+
+        return () => {
+            socket.off('fileAdded');
+            socket.off('fileRenamed');
+        }
+
+    }, [socket]);
+
     const addFile = (file: File) => {
         setFiles((prevFiles) => [...prevFiles, file]);
         setActiveFileId(file.id);
@@ -83,6 +110,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setFiles((prevFiles) =>
             prevFiles.map((file) => (file.id === id ? { ...file, content, language } : file))
         );
+        socket.emit('updateFile', { roomId: currentRoom, fileId: id, content, language });
     };
 
     const renameFile = (id: string, name: string, language: string) => {
@@ -92,18 +120,23 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateFile(id, files.find((file) => file.id === id)?.content || "//Write your code here", language);
     };
 
+    const deleteAFile = (id: string) => {
+        setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
+        if (files.length === 0) {
+            setActiveFileId(null);
+            setLanguage('');
+            setCode(getDefaultCode());
+        } else {
+            setActiveFile(files[0].id);
+        }
+    }
+
     const deleteFile = async (id: string) => {
         try {
             const { data } = await instance.delete(`/api/code/room/${currentRoom}/file/${id}`);
             if (data.status === 200) {
-                setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
-                if (files.length === 0) {
-                    setActiveFileId(null);
-                    setLanguage('');
-                    setCode(getDefaultCode());
-                } else {
-                    setActiveFile(files[0].id);
-                }
+                deleteAFile(id);
+                socket.emit('deleteFile', { roomId: currentRoom, fileId: id });
                 toastSuccess(handleServerResponse(data.reason));
             } else {
                 toastError(handleServerResponse(data.reason));
@@ -127,6 +160,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 addFile(newFile);
                 setRenamingFileId(data.data._id);
                 setNewFileName(fileName);
+                socket.emit('addFile', { roomId: currentRoom, ...newFile });
             } else {
                 throw new Error('Failed to create file');
             }
@@ -143,6 +177,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (data.status === 200) {
                 renameFile(fileId, newFileName, language);
                 setRenamingFileId(null);
+                socket.emit('renameFile', { roomId: currentRoom, fileId, name: newFileName, language });
             } else {
                 throw new Error('Failed to rename file');
             }

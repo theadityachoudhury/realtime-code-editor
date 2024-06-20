@@ -46,7 +46,6 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { authenticated, user } = useUserContext();
     const { socket } = useSocket();
 
-    console.log(usersInRoom);
 
     async function fetchRooms() {
         try {
@@ -108,7 +107,6 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const joinRoom = async (roomId: string) => {
-        console.log(roomId);
         setInRoom(true);
         setCurrentRoom(roomId);
         socket.emit('joinRoom', {
