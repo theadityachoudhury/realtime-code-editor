@@ -29,6 +29,7 @@ type RoomContextType = {
     currentRoom: string | null;
     createRoom: () => void;
     joinRoom: (roomId: string) => void;
+    leaveRoom: () => void;
     deleteRoom: (roomId: string) => void;
     isValidRoom: (roomId: string) => Promise<boolean>;
     usersInRoom: UserInRoom[];
@@ -117,6 +118,12 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
     };
 
+    const leaveRoom = () => {
+        socket.emit('leaveRoom', {currentRoom});
+        setInRoom(false);
+        setCurrentRoom(null);
+    }
+
     const deleteRoom = async (roomId: string) => {
         try {
             const { data } = await instance.delete(`/api/code/room/${roomId}`);
@@ -151,6 +158,7 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteRoom,
         isValidRoom,
         usersInRoom,
+        leaveRoom
     };
 
     return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;

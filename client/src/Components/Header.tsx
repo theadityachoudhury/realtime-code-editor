@@ -7,6 +7,7 @@ import Runner from './Tabs/Runner';
 import UsersList from './Tabs/UsersList';
 import UserChat from './Tabs/UserChat';
 import ProfilePage from './Tabs/Profile';
+import { useRoom } from '../context/RoomProvider';
 
 enum Tab {
     Files = 'files',
@@ -18,6 +19,7 @@ enum Tab {
 
 const Header: React.FC = () => {
     const { logout } = useUserContext();
+    const { leaveRoom } = useRoom();
     const [activeTab, setActiveTab] = useState<Tab>(Tab.Files);
     const iconSize = 20;
     const { files, setActiveFile, activeFile, handleRenameFile, deleteFile, renamingFileId, newFileName, setRenamingFileId, handleAddFile, setNewFileName } = useFiles();
@@ -75,7 +77,10 @@ const Header: React.FC = () => {
                         <div onClick={() => setActiveTab(Tab.Profile)} className='space-x-2 cursor-pointer' title='Profile'>
                             <User size={iconSize} />
                         </div>
-                        <div onClick={logout} className='space-x-2 cursor-pointer' title='Logout'>
+                        <div onClick={() => {
+                            leaveRoom();
+                            logout();
+                        }} className='space-x-2 cursor-pointer' title='Logout'>
                             <LogOut size={iconSize} />
                         </div>
                     </div>
