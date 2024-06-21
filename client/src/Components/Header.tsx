@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Files, Play, Users, MessageSquareMore, User, LogOut } from 'lucide-react';
+import { Files, Play, Users, MessageSquareMore, User, LogOut, DoorOpen } from 'lucide-react';
 import { useFiles } from '../context/FileProvider';
 import { useUserContext } from '../context/UserProvider';
 import FilesList from './Tabs/FilesList';
@@ -74,6 +74,11 @@ const Header: React.FC = () => {
                         </div>
                     </div>
                     <div className="space-y-8 mt-auto">
+                        <div onClick={() => {
+                            leaveRoom();
+                        }} className='space-x-2 cursor-pointer' title='Leave Room'>
+                            <DoorOpen size={iconSize} />
+                        </div>
                         <div onClick={() => setActiveTab(Tab.Profile)} className='space-x-2 cursor-pointer' title='Profile'>
                             <User size={iconSize} />
                         </div>

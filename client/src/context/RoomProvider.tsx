@@ -119,9 +119,11 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const leaveRoom = () => {
-        socket.emit('leaveRoom', {currentRoom});
+        socket.emit('leaveRoom', { currentRoom });
         setInRoom(false);
         setCurrentRoom(null);
+        //Navigate to home page
+        window.location.href = '/';
     }
 
     const deleteRoom = async (roomId: string) => {
