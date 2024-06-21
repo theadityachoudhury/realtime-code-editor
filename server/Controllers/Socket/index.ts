@@ -95,6 +95,30 @@ const joinRoom = (io: Server, socket: Socket, data: any) => {
   })
 }
 
+const leaveRoom = (io: Server, socket: Socket, data: { currentRoom: string }) => {
+  const room = rooms.find((room) => room.room_id === data.currentRoom)
+  const userId = getUserIdFromSocketIdAndRoomId(socket.id, data.currentRoom)
+  if (room && userId) {
+    const user_name = room.users.find((user) => user.user_id === userId)
+      ?.username
+    room.users = room.users.filter((user) => user.socket_id !== socket.id)
+    socket.to(room.room_id).emit('userLeft', { username: user_name })
+    socket.leave(data.currentRoom);
+
+    if (room.users.length === 0) {
+      // Optionally, remove the room if it becomes empty
+      const roomIndex = rooms.indexOf(room)
+      rooms.splice(roomIndex, 1)
+    } else {
+      io.in(room.room_id).emit('roomUsers', {
+        room_id: room.room_id,
+        users: room.users,
+      })
+    }
+  }
+
+}
+
 const disconnect = (io: Server, socket: Socket) => {
   const roomIds = getRoomIdsFromSocketId(socket.id)
 
@@ -107,6 +131,8 @@ const disconnect = (io: Server, socket: Socket) => {
           ?.username
         room.users = room.users.filter((user) => user.socket_id !== socket.id)
         io.in(room.room_id).emit('userLeft', { username: user_name })
+        socket.leave(roomId);
+
 
         if (room.users.length === 0) {
           // Optionally, remove the room if it becomes empty
@@ -180,6 +206,7 @@ const renameFile = (io: Server, socket: Socket, data: { roomId: string, fileId: 
 
 export default {
   joinRoom,
+  leaveRoom,
   disconnect,
   sendMessage,
   addFile,
