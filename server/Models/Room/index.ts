@@ -1,11 +1,13 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { IUser } from "../Users";
+import { ICommit } from "../Commits";
 
 export interface IRoom extends Document {
     createdBy: IUser["_id"];
     files: Number;
     createdAt: Date;
     updatedAt: Date;
+    head: ICommit["_id"];
 }
 
 const RoomSchema: Schema<IRoom> = new Schema(
@@ -19,6 +21,10 @@ const RoomSchema: Schema<IRoom> = new Schema(
             type: Number,
             default: 0
         },
+        head: {
+            type: Schema.Types.ObjectId,
+            ref: "Commit"
+        }
     },
     { timestamps: true }
 );
