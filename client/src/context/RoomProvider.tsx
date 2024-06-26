@@ -26,6 +26,7 @@ type RoomType = {
 type RoomContextType = {
     roomData: RoomData[];
     inRoom: boolean;
+    isValid: Boolean | null;
     currentRoom: string | null;
     createRoom: () => void;
     joinRoom: (roomId: string) => void;
@@ -33,6 +34,7 @@ type RoomContextType = {
     deleteRoom: (roomId: string) => void;
     isValidRoom: (roomId: string) => Promise<boolean>;
     usersInRoom: UserInRoom[];
+    setIsValid: React.Dispatch<React.SetStateAction<Boolean | null>>;
 };
 
 
@@ -44,6 +46,8 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [roomData, setRoomData] = useState<RoomData[]>([]);
     const [inRoom, setInRoom] = useState<boolean>(false);
     const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+    const [isValid, setIsValid] = useState<Boolean | null>(false);
+
     const { authenticated, user } = useUserContext();
     const { socket } = useSocket();
 
@@ -110,6 +114,7 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const joinRoom = async (roomId: string) => {
         setInRoom(true);
         setCurrentRoom(roomId);
+        if(isValid === false) return;
         socket.emit('joinRoom', {
             room_id: roomId, user: {
                 name: user?.name.fname as string,
@@ -160,7 +165,9 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteRoom,
         isValidRoom,
         usersInRoom,
-        leaveRoom
+        leaveRoom,
+        isValid,
+        setIsValid
     };
 
     return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;

@@ -8,10 +8,9 @@ import Loader from "../Components/Loader";
 
 
 const Editor = () => {
-  const { isValidRoom, joinRoom } = useRoom();
+  const { isValidRoom, joinRoom,isValid,setIsValid } = useRoom();
   const { id } = useParams();
   const [loading, setLoading] = useState<Boolean>(true);
-  const [isValid, setIsValid] = useState<Boolean | null>(false);
   useEffect(() => {
     if (!id) {
       setLoading(false);

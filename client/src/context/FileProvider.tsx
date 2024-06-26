@@ -37,7 +37,7 @@ const FileContext = createContext<FileContextType | undefined>(undefined);
 export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { socket } = useSocket();
     const { authenticated } = useUserContext();
-    const { currentRoom } = useRoom();
+    const { currentRoom, isValid } = useRoom();
     const { toastError, toastSuccess } = useToast();
     const { getDefaultCode, setCode, setLanguage, language } = useEditor();
     const [files, setFiles] = useState<File[]>([]);
@@ -69,7 +69,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         };
 
-        if (authenticated && currentRoom) {
+        if (authenticated && currentRoom && isValid) {
             setFiles([]); // Reset files when switching rooms
             setActiveFileId(null); // Reset active file
             fetchFiles();
