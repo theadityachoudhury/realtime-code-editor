@@ -114,7 +114,6 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const joinRoom = async (roomId: string) => {
         setInRoom(true);
         setCurrentRoom(roomId);
-        if(isValid === false) return;
         socket.emit('joinRoom', {
             room_id: roomId, user: {
                 name: user?.name.fname as string,

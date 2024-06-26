@@ -74,7 +74,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setActiveFileId(null); // Reset active file
             fetchFiles();
         }
-    }, [authenticated, currentRoom, toastError]);
+    }, [authenticated, currentRoom, toastError, isValid]);
 
     useEffect(() => {
         socket.on('fileAdded', (data: { id: string, name: string, content: string, language: string }) => {
