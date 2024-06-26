@@ -127,7 +127,7 @@ const deleteRoom = async (req: customRequest, res: Response) => {
                 data: null
             });
         }
-        CommitModel.deleteMany({ room: req.params.id }).session(session);
+        await CommitModel.deleteMany({ room: req.params.id }).session(session);
         await session.commitTransaction();
         session.endSession();
         return res.status(200).json({
