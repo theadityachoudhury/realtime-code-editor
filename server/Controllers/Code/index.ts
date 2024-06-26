@@ -5,6 +5,7 @@ import { customRequest } from "../Auth";
 import { BAD_REQUEST, DB_SUCCESS, DB_UNABLE, FILE_ALREADY_EXISTS, FILE_CREATED, FILE_DELETED, FILE_NOT_FOUND, FILE_UPDATED, ROOM_CANNOT_CREATE, ROOM_CREATED, ROOM_DELETED, ROOM_NOT_FOUND, SERVER_ERROR } from "../../Utils/responseReason";
 import FileModel from "../../Models/Files";
 import mongoose from "mongoose";
+import CommitModel from "../../Models/Commits";
 
 const execute = async (req: Request, res: Response) => {
     const { language, version, files, stdin }: {
@@ -126,6 +127,7 @@ const deleteRoom = async (req: customRequest, res: Response) => {
                 data: null
             });
         }
+        CommitModel.deleteMany({ room: req.params.id }).session(session);
         await session.commitTransaction();
         session.endSession();
         return res.status(200).json({
