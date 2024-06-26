@@ -125,8 +125,8 @@ const showLogs = async (req: Request, res: Response) => {
 
 const getCommit = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const commit = await CommitModel.findById(id);
+        const { commitId } = req.params;
+        const commit = await CommitModel.findById(commitId);
         if (!commit) {
             return res.status(200).json({
                 message: COMMIT_NOT_FOUND,
