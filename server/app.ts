@@ -3,6 +3,7 @@ import cors from 'cors'
 import { startServer } from './Utils'
 import Auth from './Routes/Auth'
 import Code from './Routes/Code'
+import VCS from './Routes/VCS'
 import cookieParser from 'cookie-parser'
 import config from './Config'
 
@@ -55,6 +56,7 @@ app.get('/health', (req: Request, res: Response) => {
 //App Routes
 app.use('/api/auth', Auth)
 app.use('/api/code', Code);
+app.use('/api/vcs', VCS)
 
 // Default not-found route
 app.use((req: Request, res: Response) => {

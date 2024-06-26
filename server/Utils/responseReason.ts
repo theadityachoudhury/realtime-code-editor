@@ -62,3 +62,11 @@ export const FILE_DELETED = 'file-deleted';
 export const FILE_NOT_FOUND = 'file-not-found';
 export const FILE_UPDATED = 'file-updated';
 export const FILE_ALREADY_EXISTS = 'file-already-exists';
+
+
+//VCS
+export const NO_CHANGES_FOUND = 'no-changes-found';
+export const CHANGES_ADDED = 'changes-added';
+export const CHANGES_COMMITTED = 'changes-committed';
+export const LOGS_FOUND = 'logs-found';
+export const COMMIT_NOT_FOUND = 'commit-not-found';
