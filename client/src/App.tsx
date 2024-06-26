@@ -6,6 +6,7 @@ import Editor from "./Pages/Editor"
 import Forget from "./Pages/Forget"
 import Verify from "./Pages/Verify"
 import Home from "./Pages/Home"
+import CommitHistory from "./Pages/CommitHistory"
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/editor/:id" element={<Editor />} />
           <Route path="/verify" element={<Verify />} />
-
+          <Route path="/vcs/commit/:id/:commitId" element={<CommitHistory />} />
         </Route>
 
         <Route path="/">

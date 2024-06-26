@@ -30,7 +30,7 @@ const VersionControl = () => {
                     {commits.map((commit, index) => {
                         return (
                             <div key={index} className="text-md bg-gray-700 rounded-lg p-2">
-                                <Link to={`/vcs/commit/${currentRoom}/${commit._id}`}>
+                                <Link to={`/vcs/commit/${currentRoom}/${commit._id}`} target="_blank">
                                     {commit._id} - {commit.message}
                                 </Link>
                             </div>
