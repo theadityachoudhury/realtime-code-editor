@@ -6,7 +6,7 @@ const UsersList = () => {
     const colors = ['bg-red-700', 'bg-blue-700', 'bg-green-700', 'bg-yellow-700', 'bg-indigo-700', 'bg-purple-700', 'bg-pink-700'];
 
     return (
-        <div className="text-black min-w-64 max-w-full h-full m-2">
+        <div className="text-black min-w-72 max-w-72 h-full">
             <div className="space-y-2">
                 <p className="text-3xl text-white font-poppins font-thin">
                     Users List

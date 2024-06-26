@@ -9,7 +9,7 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="text-black min-w-64 max-w-full h-full flex flex-col mx-2">
+        <div className="text-black min-w-72 max-w-72 h-full flex flex-col">
             <div className="space-y-2">
                 <p className="text-3xl text-white font-poppins font-thin">Profile</p>
                 <hr />

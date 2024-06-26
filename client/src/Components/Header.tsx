@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Files, Play, Users, MessageSquareMore, User, LogOut, DoorOpen } from 'lucide-react';
+import { Files, Play, Users, MessageSquareMore, User, LogOut, DoorOpen, GitBranchPlus } from 'lucide-react';
 import { useFiles } from '../context/FileProvider';
 import { useUserContext } from '../context/UserProvider';
 import FilesList from './Tabs/FilesList';
@@ -8,6 +8,7 @@ import UsersList from './Tabs/UsersList';
 import UserChat from './Tabs/UserChat';
 import ProfilePage from './Tabs/Profile';
 import { useRoom } from '../context/RoomProvider';
+import VersionControl from './Tabs/VersionControl';
 
 enum Tab {
     Files = 'files',
@@ -15,6 +16,7 @@ enum Tab {
     Users = 'users',
     Chat = 'chat',
     Profile = 'profile',
+    VersionControl = 'versionControl'
 }
 
 const Header: React.FC = () => {
@@ -49,6 +51,8 @@ const Header: React.FC = () => {
                 return <UserChat />;
             case Tab.Profile:
                 return <ProfilePage />;
+            case Tab.VersionControl:
+                return <VersionControl />;
             default:
                 return <div>Select a tab</div>;
         }
@@ -71,6 +75,9 @@ const Header: React.FC = () => {
                         </div>
                         <div onClick={() => setActiveTab(Tab.Chat)} className='cursor-pointer' title='Chat'>
                             <MessageSquareMore size={iconSize} />
+                        </div>
+                        <div onClick={() => setActiveTab(Tab.VersionControl)} className='cursor-pointer' title='Version Control'>
+                            <GitBranchPlus size={iconSize} />
                         </div>
                     </div>
                     <div className="space-y-8 mt-auto">

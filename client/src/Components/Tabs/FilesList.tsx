@@ -30,7 +30,7 @@ const FilesList: React.FC<FilesProps> = ({
     setActiveFile,
 }) => {
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full max-w-72 min-w-72 flex flex-col">
             <div className="flex justify-between items-center space-x-36">
                 <h1 className="text-2xl font-bold">Files</h1>
                 <button onClick={handleAddFile} className="p-2 bg-indigo-800 hover:bg-indigo-600 text-indigo-50 hover:text-indigo-100 rounded-md">Add File</button>

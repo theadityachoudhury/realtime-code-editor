@@ -15,7 +15,7 @@ const UserChat = () => {
     };
 
     return (
-        <div className="text-black min-w-56 max-w-full h-full flex flex-col" onKeyDown={(e) => {
+        <div className="text-black min-w-72 max-w-72 h-full flex flex-col" onKeyDown={(e) => {
             if (e.key === 'Enter') handleSendMessage()
         }}>
             <div className="space-y-2">

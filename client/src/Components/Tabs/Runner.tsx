@@ -15,7 +15,7 @@ const Runner = () => {
     };
 
     return (
-        <div className="text-black space-y-5" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+        <div className="text-black space-y-5 min-w-72 max-w-72" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
             <div className="space-y-2">
                 <p className="text-3xl text-white font-poppins font-thin">
                     Run Code
@@ -28,7 +28,7 @@ const Runner = () => {
                     id="language"
                     value={languageInfo?.language ?? ''}
                     onChange={handleLanguageChange}
-                    className="bg-gray-700 text-gray-50 p-3 rounded-md text-lg pr-20"
+                    className="bg-gray-700 text-gray-50 p-3 rounded-md text-lg w-full"
                 >
                     {Object.entries(languageMap).map(([language, { version }]) => (
                         <option key={language} value={language}>
@@ -43,9 +43,8 @@ const Runner = () => {
                     name="stdin"
                     id="stdin"
                     rows={10}
-                    cols={28}
                     placeholder="Write your input here"
-                    className="bg-gray-700 rounded-md p-2 text-gray-50 text-lg"
+                    className="bg-gray-700 p-2 text-gray-50 text-lg w-full"
                     onChange={handleInputChange}
                 ></textarea>
             </div>
@@ -60,7 +59,7 @@ const Runner = () => {
             <div className="space-y-2">
                 <p className="text-white text-lg">Output:</p>
                 <div
-                    className="bg-gray-700 p-2 rounded-md text-gray-50 max-w-64 min-h-80 word-wrap text-lg overflow-auto"
+                    className="bg-gray-700 p-2 rounded-md text-gray-50 w-full min-h-80 word-wrap text-lg overflow-auto"
                     style={{ whiteSpace: 'pre-wrap' }}
                 >
                     {output}
