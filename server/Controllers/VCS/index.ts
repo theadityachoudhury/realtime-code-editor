@@ -10,8 +10,33 @@ const add = async (req: customRequest, res: Response) => {
         const { user_id } = req;
 
         const files = await FileModel.find({ room: id }, { fileName: 1, content: 1, file: "$_id", _id: 0 });
+        const lastCommit = await CommitModel.findOne({ room: id, status: "committed" }).sort({ createdAt: -1 });
 
         if (!files) {
+            return res.status(200).json({
+                data: null,
+                message: NO_CHANGES_FOUND,
+                success: false,
+                status: 404
+            })
+        }
+
+        let changedFiles;
+        //check for new file creation, deletion and fileChanges
+        if (lastCommit) {
+            changedFiles = files.filter((file: any) => {
+                const fileInCommit = lastCommit.changes.find((change: any) => change.fileName === file.fileName);
+                if (!fileInCommit) {
+                    return file;
+                } else if (fileInCommit.content !== file.content) {
+                    return file;
+                }
+            });
+        } else {
+            changedFiles = files;
+        }
+
+        if (changedFiles.length === 0) {
             return res.status(200).json({
                 data: null,
                 message: NO_CHANGES_FOUND,
@@ -33,7 +58,7 @@ const add = async (req: customRequest, res: Response) => {
                 room: id,
                 stagedBy: user_id,
                 status: "staging",
-                changes: files
+                changes: changedFiles
             });
             await newCommit.save();
             commitId = newCommit._id;
