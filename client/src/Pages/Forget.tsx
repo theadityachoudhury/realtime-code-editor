@@ -1,5 +1,7 @@
 import { useState, useRef, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import PageMeta from '../Utils/PageMeta';
+import config from '../Config';
 
 interface ForgetPasswordFormData {
   email: string;
@@ -38,6 +40,8 @@ const Forget = () => {
 
   return (
     <div className="flex h-screen justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-500">
+        <PageMeta title="Forget Password | CodeSync" description="CodeSync helps to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Check out now!" canonical={`${config.FRONTEND_URL}/forget`} />
+
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md m-1 sm:m-0">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-indigo-600">Forget Password</h1>

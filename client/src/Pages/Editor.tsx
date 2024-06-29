@@ -30,6 +30,7 @@ const Editor = () => {
   if (!loading && !isValid) {
     return (
       <div className="bg-gray-700 h-screen flex justify-center items-center">
+        <PageMeta title="Editor | CodeSync" description="CodeSync helps to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Check out now!" canonical={`${config.FRONTEND_URL}/editor/${id}`} />
         <div className="text-center text-xl sm:text-3xl space-y-8">
           <div className="space-y-2">
             <p>This room you are trying to join do not exist.</p>
@@ -47,7 +48,7 @@ const Editor = () => {
     return (
 
       <div>
-        <PageMeta title="Editor | CodeSync" description="CodeSync helps to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Check out now!" canonical={`${config.FRONTEND_URL}/editor`} />
+        <PageMeta title="Editor | CodeSync" description="CodeSync helps to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Check out now!" canonical={`${config.FRONTEND_URL}/editor/${id}`} />
         <CodeEditor />
       </div>
     )

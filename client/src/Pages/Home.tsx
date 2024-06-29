@@ -1,3 +1,5 @@
+import config from "../Config";
+import PageMeta from "../Utils/PageMeta";
 import { useRoom } from "../context/RoomProvider";
 import { useUserContext } from "../context/UserProvider";
 import {Link} from "react-router-dom";
@@ -8,6 +10,8 @@ const Home = () => {
 
   return (
     <div className="bg-gray-700 text-white min-h-screen p-6 flex flex-col overflow-hidden">
+        <PageMeta title="Dashboard | CodeSync" description="CodeSync helps to collaborate on code in real-time with your team. Experience seamless, multi-user coding with our online code editor. Check out now!" canonical={`${config.FRONTEND_URL}/`} />
+
       <div className="">
         <div className="mb-6">
           <p className="text-4xl mb-2">Welcome, {user?.name.fname}</p>

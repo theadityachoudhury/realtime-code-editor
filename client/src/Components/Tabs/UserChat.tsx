@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useChat } from "../../context/ChatProvider";
 import { useUserContext } from "../../context/UserProvider";
 
@@ -6,6 +6,7 @@ const UserChat = () => {
     const { messages, sendMessage } = useChat();
     const { user } = useUserContext();
     const [message, setMessage] = useState<string>("");
+    const chatContainerRef = useRef<HTMLDivElement>(null);
 
     const handleSendMessage = () => {
         if (message.trim()) {
@@ -14,10 +15,19 @@ const UserChat = () => {
         }
     };
 
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     return (
-        <div className="text-black min-w-72 max-w-72 h-full flex flex-col" onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSendMessage()
-        }}>
+        <div
+            className="text-black min-w-72 max-w-72 h-full flex flex-col"
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSendMessage()
+            }}
+        >
             <div className="space-y-2">
                 <p className="text-3xl text-white font-poppins font-thin">
                     Chat
@@ -25,7 +35,10 @@ const UserChat = () => {
                 <hr />
             </div>
 
-            <div className="overflow-y-auto flex-grow p-2">
+            <div
+                className="overflow-y-auto flex-grow p-2"
+                ref={chatContainerRef}
+            >
                 <div className="space-y-2">
                     {messages.map((msg, index) => (
                         <div

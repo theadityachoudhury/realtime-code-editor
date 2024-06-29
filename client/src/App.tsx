@@ -7,6 +7,7 @@ import Forget from "./Pages/Forget"
 import Verify from "./Pages/Verify"
 import Home from "./Pages/Home"
 import CommitHistory from "./Pages/CommitHistory"
+import Logout from "./Pages/Logout"
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forget />} />
+          <Route path="/logout" element={<Logout />} />
 
         </Route>
 
