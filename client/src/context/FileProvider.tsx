@@ -59,6 +59,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     setFiles(fetchedFiles);
                     if (fetchedFiles.length > 0) {
                         setActiveFile(fetchedFiles[0].id);
+                        setLanguage(fetchedFiles[0].language);
                     }
                 } else {
                     throw new Error('Failed to fetch files');

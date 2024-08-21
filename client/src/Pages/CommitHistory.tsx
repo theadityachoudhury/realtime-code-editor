@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import instance from '../axios';
 import { Transition } from '@headlessui/react';
 import Loader from '../Components/Loader';
+import { Editor } from '@monaco-editor/react';
+import { getLanguageFromExtension } from '../Utils/defaultExtensionMap';
 
 interface Commit {
     _id: string;
@@ -45,7 +47,7 @@ const CommitHistory: React.FC = () => {
     }, [id, commitId]);
 
     if (!commit) {
-        return <Loader fullScreen={true} type='spinner' size={60}/>;
+        return <Loader fullScreen={true} type='spinner' size={60} />;
     }
 
     const toggleFile = (fileId: string) => {
@@ -56,8 +58,7 @@ const CommitHistory: React.FC = () => {
         <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white">
             <div className="w-full max-w-4xl p-6 bg-gray-800 rounded-lg shadow-lg space-y-5">
                 <div>
-                    <button onClick={() => { window.close() }} className="py-2 px-4 bg-blue-600 rounded hover:bg-blue-700 transition-colors"
-                    >
+                    <button onClick={() => { window.close() }} className="py-2 px-4 bg-blue-600 rounded hover:bg-blue-700 transition-colors">
                         Back to Room
                     </button>
                 </div>
@@ -83,8 +84,10 @@ const CommitHistory: React.FC = () => {
                 <div>
                     <strong>Changes:</strong>
                     <ul className="pl-5">
-                        {commit.changes.map(change => (
-                            <li key={change._id} className="mb-2">
+                        {commit.changes.map((change) => {
+                            const language = getLanguageFromExtension(change.fileName.split('.').pop() || '');
+                            console.log(language);
+                            return <li key={change._id} className="mb-2">
                                 <button
                                     onClick={() => toggleFile(change._id)}
                                     className="text-left w-full text-lg font-semibold focus:outline-none flex items-center"
@@ -103,12 +106,56 @@ const CommitHistory: React.FC = () => {
                                     leaveFrom="transform scale-100 opacity-100"
                                     leaveTo="transform scale-95 opacity-0"
                                 >
-                                    <pre className="bg-gray-700 p-2 rounded-lg overflow-auto mt-2">
-                                        {change.content}
-                                    </pre>
+                                    <div className="bg-gray-700 p-2 h-full rounded-lg mt-2">
+                                        <Editor
+                                            height="50vh"
+                                            width="100%"
+                                            defaultLanguage="plaintext"
+                                            defaultValue={change.content}
+                                            loading={<Loader type='spinner' size={48} />}
+                                            options={{
+                                                wordWrap: 'on',
+                                                minimap: { enabled: false },
+                                                autoClosingBrackets: 'always',
+                                                "semanticHighlighting.enabled": true,
+                                                fontSize: 16,
+                                                tabSize: 4,
+                                                autoClosingComments: 'always',
+                                                autoSurround: 'languageDefined',
+                                                columnSelection: true,
+                                                codeLens: true,
+                                                autoIndent: 'full',
+                                                formatOnType: true,
+                                                formatOnPaste: true,
+                                                contextmenu: true,
+                                                accessibilitySupport: 'auto',
+                                                acceptSuggestionOnEnter: 'on',
+                                                acceptSuggestionOnCommitCharacter: true,
+                                                snippetSuggestions: 'inline',
+                                                suggestOnTriggerCharacters: true,
+                                                suggestSelection: 'first',
+                                                tabCompletion: 'on',
+                                                autoClosingQuotes: 'always',
+                                                autoClosingOvertype: 'always',
+                                                autoClosingDelete: 'always',
+                                                automaticLayout: true,
+                                                dragAndDrop: true,
+                                                colorDecorators: true,
+                                                colorDecoratorsActivatedOn: "clickAndHover",
+                                                copyWithSyntaxHighlighting: true,
+                                                cursorBlinking: 'blink',
+                                                cursorSmoothCaretAnimation: "on",
+                                                mouseWheelZoom: true,
+                                                quickSuggestions: { other: true, comments: true, strings: true },
+                                                readOnly: true,
+                                            }}
+                                            theme="vs-dark"
+                                            language={language}
+                                        />
+                                    </div>
                                 </Transition>
                             </li>
-                        ))}
+                        })}
                     </ul>
                 </div>
             </div>
